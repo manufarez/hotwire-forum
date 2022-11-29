@@ -3,7 +3,7 @@ Rails.application.routes.draw do
   devise_for :users
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
   resources :discussions do
-    resources :posts, only: [:create], module: :discussions
+    resources :posts, only: [:create, :show, :edit, :update], module: :discussions
   end
   # Defines the root path route ("/")
   root "main#index"
