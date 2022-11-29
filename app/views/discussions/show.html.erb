@@ -1,2 +1,8 @@
 <%= turbo_stream_from(@discussion) %>
 <%= render 'discussions/header', discussion: @discussion %>
+
+<hr class="my-4">
+
+<div id="<%= dom_id(@new_post) %>">
+  <%= render "discussions/posts/form", post: @new_post %>
+</div>

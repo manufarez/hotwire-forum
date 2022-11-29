@@ -1,7 +1,9 @@
 class Discussion < ApplicationRecord
   belongs_to :user, default: -> { Current.user }
+  has_many :posts, dependent: :destroy
 
   validates :name, presence: true
+  accepts_nested_attributes_for :posts
 
   #This callback is called after a record has been created.
   after_create_commit -> { broadcast_prepend_to "discussions" }
