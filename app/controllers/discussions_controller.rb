@@ -4,6 +4,7 @@ class DiscussionsController < ApplicationController
 
   def index
     @discussions = Discussion.all.pinned_first
+  end
 
   def new
     @discussion = Discussion.new

@@ -18,6 +18,7 @@ module Discussions
     end
 
     def show
+      sleep 2
     end
 
     def edit
