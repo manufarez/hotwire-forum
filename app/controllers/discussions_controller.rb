@@ -3,8 +3,7 @@ class DiscussionsController < ApplicationController
   before_action :set_discussion, only: [:edit, :update, :destroy, :show]
 
   def index
-    @discussions = Discussion.all.order(updated_at: :desc)
-  end
+    @discussions = Discussion.all.pinned_first
 
   def new
     @discussion = Discussion.new

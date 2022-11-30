@@ -16,6 +16,8 @@ class Discussion < ApplicationRecord
 
   broadcasts_to :category, inserts_by: :prepend
 
+  scope :pinned_first, -> { order(pinned: :desc, updated_at: :desc)}
+
   def to_param
     "#{id}-#{name.downcase.to_str[0..50]}".parameterize
   end
