@@ -14,6 +14,8 @@ class Discussion < ApplicationRecord
   after_update_commit -> { broadcast_replace_to "discussions" }
   after_destroy_commit -> { broadcast_remove_to "discussions" }
 
+  broadcasts_to :category, inserts_by: :prepend
+
   def to_param
     "#{id}-#{name.downcase.to_str[0..50]}".parameterize
   end
