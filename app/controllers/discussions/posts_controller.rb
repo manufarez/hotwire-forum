@@ -9,7 +9,14 @@ module Discussions
 
       respond_to do |format|
         if @post.save
-          format.html { redirect_to discussion_path(@discussion), notice: "Post submitted"}
+          #If the post 'redirect' parameter is present, redirect to the last page (html response)
+          if params.dig('post', 'redirect').present?
+            @pagy, @posts = pagy(@discussion.posts.order(created_at: :desc), items: 5)
+            format.html { redirect_to discussion_path(@discussion, page: @pagy.last), notice: "Post submitted"}
+          else
+            @post = @discussion.posts.new
+            format.turbo_stream
+          end
         else
           format.turbo_stream
           format.html { render :new, status: :unprocessable_entity }

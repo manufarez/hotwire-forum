@@ -23,6 +23,12 @@
         <%= form.label :body, class:'visually-hidden form-label' %>
         <%= form.rich_text_area :body, placeholder: 'Your post', autofocus: true %>
       </div>
+
+      <!--  local_assigns : Rails view helper to check if current partial has been provided with local variables -->
+      <% if local_assigns[:redirect] %>
+        <%= form.hidden_field :redirect, value: true %>
+      <% end %>
+
       <div class="mb-3">
         <%= form.submit class:'btn btn-primary' %>
       </div>
