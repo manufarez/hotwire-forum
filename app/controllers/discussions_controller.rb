@@ -34,38 +34,7 @@ class DiscussionsController < ApplicationController
   def update
     respond_to do |format|
       if @discussion.update(discussion_params)
-
-        #Make discussion index update in realtime
-        @discussion.broadcast_replace(partial: "discussions/header", locals: {discussion: @discussion})
-
-        #Make discussion update its category in realtime
-        if @discussion.saved_change_to_category_id?
-          #Below is an implicit array of 2 variables -> old_category_id, old_category_id = [id_1, id_2]
-          old_category_id, new_category_id = @discussion.saved_change_to_category_id
-
-          old_category = Category.find(old_category_id)
-          new_category = Category.find(new_category_id)
-
-          #remove it from the old category list  / insert it to the new list
-          @discussion.broadcast_remove_to(old_category)
-          @discussion.broadcast_prepend_to(new_category)
-
-          #Update categories by replacing them. This updates the counters in the sidebar.
-          old_category.reload.broadcast_replace_to("categories")
-          new_category.reload.broadcast_replace_to("categories")
-        end
-
-        #Make discussion open/closed in realtime
-        if @discussion.saved_change_to_closed?
-          @discussion.broadcast_action_to(
-            @discussion,
-            action: :replace,
-            target: "new_post_form",
-            partial: "discussions/posts/form",
-            locals: {post: @discussion.posts.new}
-          )
-        end
-
+        DiscussionBroadcaster.new(@discussion).broadcast!
         format.html { redirect_to @discussion, notice: 'Discussion updated' }
       else
         format.html { render :edit, status: :unprocessable_entity}
