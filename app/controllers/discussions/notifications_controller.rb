@@ -8,7 +8,6 @@ module Discussions
       redirect_to @discussion
     end
 
-
     private
 
     def set_discussion
