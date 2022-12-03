@@ -8,6 +8,8 @@ Rails.application.routes.draw do
     collection do
       get 'category/:id', to: 'categories/discussions#index', as: 'category'
     end
+    #If  you want to route /notifications (without the prefix /discussions) to Discussions::NotificationsController, you can specify it with module
+    resources :notifications, only: [:create], module: :discussions
   end
   # Defines the root path route ("/")
   root "main#index"
