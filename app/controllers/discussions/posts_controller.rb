@@ -9,6 +9,7 @@ module Discussions
 
       respond_to do |format|
         if @post.save
+          send_post_notification!(@post)
           #If the post 'redirect' parameter is present, redirect to the last page (html response)
           if params.dig('post', 'redirect').present?
             @pagy, @posts = pagy(@discussion.posts.order(created_at: :desc), items: 5)
@@ -50,6 +51,12 @@ module Discussions
     end
 
     private
+
+    def send_post_notification!(post)
+      post_subscribers = post.discussion.subscribed_users - [post.user]
+      NewPostNotification.with(post: post).deliver_later(post_subscribers)
+    end
+
     def set_discussion
       @discussion = Discussion.find(params[:discussion_id])
     end
