@@ -55,4 +55,31 @@ class Discussion < ApplicationRecord
       discussion_subscriptions.create(user: user, subscription_type: "optin")
     end
   end
+
+  def subscribed?(user)
+    return false if user.nil?
+
+    #Return true if there's a subscription found and type is opted in
+    if subscription = subscription_for(user)
+      subscription.subscription_type == "optin"
+    else
+      posts.where(user_id: user.id).any?
+    end
+  end
+
+  def subscribed_reason(user)
+    return "Your're not receiving notifications from this thread" if user.nil?
+
+    if subscription = subscription_for(user)
+      if  subscription.subscription_type == "optout"
+        "You're ignoring this thread"
+      elsif subscription.subscription_type == "optin"
+        "You're receiving notifications because you've subscribed to this thread"
+      end
+    elsif posts.where(user_id: user.id).any?
+      "You're receiving notifications because you'vre posted in this thread"
+    else
+      "You're not receiving notifications from this thread"
+    end
+  end
 end
